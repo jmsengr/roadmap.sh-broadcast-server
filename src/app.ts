@@ -21,6 +21,9 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(process.cwd(), "public")));
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 // ----- ROUTES ----- //
 app.get("/test", async (req: Request, res: Response, next: NextFunction) => {
     res.json({ success: true, data: "TEST MESSAGE" });
