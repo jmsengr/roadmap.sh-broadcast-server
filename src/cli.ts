@@ -30,9 +30,8 @@ if (flag[0] !== "start" && flag[0] !== "connect") {
 if (flag[0] === "start") {
     isPortTaken(Number(process.env.PORT) || 3000, (taken: boolean) => {
         if (taken) {
-            console.log(
-                kleur.red(`Port ${process.env.PORT || 3000} is already in use. Please free the port and try again.`),
-            );
+            console.log(kleur.red(`Server is already running on port ${process.env.PORT || 3000}`));
+            console.log(`Use ` + kleur.underline("connect") + ` to connect to the existing server.`);
             process.exit(1);
         } else {
             startServer();
