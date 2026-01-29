@@ -1,29 +1,37 @@
 import http from "http";
 import app from "./app.js";
-// import prisma from "./database/prisma.js";
+import kleur from "kleur";
+import { initWebSocketHandshake } from "./websocket.js";
 
 const PORT = process.env.PORT || 3000;
 
-const startServer = async () => {
-    try {
-        // await prisma.$connect();
-        // console.log("Prisma connected to the database");
+let httpServer: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 
-        const server = http.createServer(app);
+const startServer = () => {
+	try {
+		// Initialize Server
+		httpServer = http.createServer(app);
 
-        server.listen(PORT, () => {
-            console.log("Server running on port", PORT);
-        });
+		initWebSocketHandshake(httpServer);
+		console.log(kleur.yellow("Web Socket Upgraded"));
 
-        // Graceful Shutdown
-        process.on("SIGTERM", () => {
-            console.log("SIGTERM received, closing server...");
-            server.close(() => console.log("Server closed"));
-        });
-    } catch (err) {
-        console.error("Failed to start server:", err);
-        process.exit(1);
-    }
+		httpServer.listen(PORT, () => {
+			console.log(kleur.white("Server running on port " + PORT));
+		});
+
+		// Graceful Shutdown
+		process.on("SIGTERM", () => {
+			console.log("SIGTERM received, closing server...");
+			httpServer.close(() => console.log("Server closed"));
+		});
+	} catch (err) {
+		console.error("Failed to start server:", err);
+		process.exit(1);
+	}
 };
 
-export default startServer;
+const getServer = () => {
+	return httpServer;
+};
+
+export { startServer, getServer };

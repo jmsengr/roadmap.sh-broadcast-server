@@ -1,41 +1,43 @@
 {
-    "type": "module",
-    "name": "broadcast-server",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon",
-        "start": "node ./dist/server.js"
-    },
-    "bin": {
-        "broadcast-server": "./dist/cli.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
-    "dependencies": {
-        "@prisma/adapter-pg": "^7.3.0",
-        "@prisma/client": "^7.3.0",
-        "axios": "^1.13.3",
-        "cookie-parser": "^1.4.7",
-        "cors": "^2.8.6",
-        "dotenv": "^17.2.3",
-        "ejs": "^4.0.1",
-        "express": "^5.2.1",
-        "kleur": "^4.1.5",
-        "pg": "^8.17.2"
-    },
-    "devDependencies": {
-        "@types/cookie-parser": "~1.4.10",
-        "@types/cors": "~2.8.19",
-        "@types/express": "^5.0.6",
-        "@types/node": "^25.0.10",
-        "@types/pg": "^8.16.0",
-        "nodemon": "^3.1.11",
-        "prisma": "^6.19.2",
-        "ts-node": "^10.9.2",
-        "typesync": "^0.14.3"
-    }
+	"type": "module",
+	"name": "broadcast-server",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"bin": {
+		"broadcast-server": "./dist/cli.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@prisma/adapter-pg": "^7.3.0",
+		"@prisma/client": "^7.3.0",
+		"axios": "^1.13.3",
+		"cookie-parser": "^1.4.7",
+		"cors": "^2.8.6",
+		"dotenv": "^17.2.3",
+		"ejs": "^4.0.1",
+		"express": "^5.2.1",
+		"kleur": "^4.1.5",
+		"pg": "^8.17.2",
+		"socket.io": "^4.8.3",
+		"socket.io-client": "^4.8.3",
+		"tsx": "^4.21.0"
+	},
+	"devDependencies": {
+		"@types/cookie-parser": "~1.4.10",
+		"@types/cors": "~2.8.19",
+		"@types/ejs": "~3.1.5",
+		"@types/express": "^5.0.6",
+		"@types/node": "^25.0.10",
+		"@types/pg": "^8.16.0",
+		"nodemon": "^3.1.11",
+		"prisma": "^6.19.2",
+		"ts-node": "^10.9.2",
+		"typesync": "^0.14.3"
+	}
 }

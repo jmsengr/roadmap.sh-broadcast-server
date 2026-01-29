@@ -2,8 +2,10 @@
 
 import kleur from "kleur";
 import { isPortTaken } from "./helpers/portChecker.js";
-import startServer from "./server.js";
+import { startServer, getServer } from "./server.js";
 import dotenv from "dotenv";
+import { initWebSocketHandshake, connectSocket, disconnectSocket } from "./websocket.js";
+import { createInterface } from "readline";
 
 dotenv.config();
 
@@ -25,10 +27,48 @@ if (!flag.length) {
 	isPortTaken(Number(process.env.PORT) || 3000, (taken: boolean) => {
 		if (taken) {
 			console.log(kleur.red(`Server is already running on port ${process.env.PORT || 3000}`));
-			console.log(`Use ` + kleur.underline("connect") + ` to connect to the existing server.`);
+			console.log(`Use ` + kleur.underline("--connect") + ` flag to connect to the existing server.`);
 			process.exit(1);
 		} else {
 			startServer();
 		}
 	});
+} else if (flag[0] === "connect") {
+	isPortTaken(Number(process.env.PORT) || 3000, (taken: boolean) => {
+		if (taken) {
+			connectSocket();
+
+			// Initialize Client CLI
+			initClientCli();
+		} else {
+			console.log(kleur.red("Server is not running, make sure to start it first"));
+			process.exit(1);
+		}
+	});
 }
+
+const initClientCli = () => {
+	const rl = createInterface({
+		input: process.stdin,
+		output: process.stdout,
+	});
+
+	console.log();
+	const prompt = () => {
+		rl.question(">  ", async (input: string) => {
+			if (input === "exit") {
+				rl.close();
+				disconnectSocket();
+				console.log(kleur.red("Program Exit"));
+				process.exit(1);
+			}
+
+			if (!input || input === "") {
+				prompt();
+				return;
+			}
+		});
+	};
+
+	prompt();
+};
