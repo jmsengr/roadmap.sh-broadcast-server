@@ -2,52 +2,63 @@ import type { ServerToClientEvents, ClientToServerEvents } from "./interface/web
 import { Server } from "socket.io";
 import { io, Socket } from "socket.io-client";
 import type http from "http";
+import kleur from "kleur";
+import { syncTimer } from "./helpers/countDown.js";
 
 const initWebSocketHandshake = (httpServer: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>) => {
-	const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer);
+    const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer);
 
-	// Socket Connections
-	io.on("connection", (socket) => {
-		socket.emit("serverMsg", {
-			msg: `Welcome! your socket id is ${socket.id}`,
-			room: socket.id,
-		});
+    // Socket Connections
+    io.on("connection", (socket) => {
+        socket.emit("serverMsg", {
+            msg: `Welcome! your socket id is ${socket.id}`,
+            room: socket.id,
+        });
 
-		// Recieve message from client
-		socket.on("clientMsg", (payload) => {});
+        // Recieve message from client
+        socket.on("clientMsg", (payload) => {});
 
-		// Broadcast message to all clients
-		io.emit("serverMsg", {
-			msg: `Client counts ${io.engine.clientsCount}`,
-			room: socket.id,
-		});
-	});
+        // Broadcast message to all clients
+        io.emit("serverMsg", {
+            msg: `Client counts ${io.engine.clientsCount}`,
+            room: socket.id,
+        });
+    });
 };
 
 // CLIENT SIDE
 let clientSocket: Socket<ServerToClientEvents, ClientToServerEvents> | null;
 
-const connectSocket = () => {
-	if (clientSocket?.connected) {
-		console.log("Already connected");
-		return;
-	}
+const connectSocket = async () => {
+    if (clientSocket?.connected) {
+        console.log("Already connected");
+        return;
+    }
 
-	clientSocket = io("http://localhost:3000");
+    clientSocket = io("http://localhost:3000");
 
-	clientSocket.on("connect", () => {
-		console.log("Connected to server!");
-	});
+    if (!clientSocket || clientSocket === null) {
+        console.log(kleur.bgRed("Failed to connect to websocket server"));
+        return;
+    }
+
+    console.log(kleur.green("Connected to websocket server"));
 };
 
-const disconnectSocket = () => {
-	if (clientSocket && clientSocket.connected) {
-		clientSocket.disconnect();
-		clientSocket = null;
-		console.log("Disconnected from server");
-	} else {
-		console.log("No active socket connection");
-	}
+const disconnectWebSocket = async (): Promise<void> => {
+    return new Promise((resolve) => {
+        if (!clientSocket || !clientSocket.connected) {
+            return resolve();
+        }
+
+        clientSocket.once("disconnect", () => {
+            clientSocket = null;
+            console.log(kleur.green("[WEB SOCKET DISCONNECTED]"));
+            resolve();
+        });
+
+        clientSocket.disconnect();
+    });
 };
 
-export { initWebSocketHandshake, connectSocket, disconnectSocket };
+export { initWebSocketHandshake, connectSocket, disconnectWebSocket };

@@ -3,7 +3,10 @@ import express, { Request, Response, NextFunction } from "express";
 // ---- HELPERS ---- //
 
 // server
-import { getServer } from "./server.js";
+import { disconnectHttpServer } from "./server.js";
+import { disconnectWebSocket } from "./websocket.js";
+import { syncTimer } from "./helpers/countDown.js";
+import isPortTaken from "./helpers/portChecker.js";
 
 // dirname & filename
 import { fileURLToPath } from "url";
@@ -45,15 +48,14 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-const gracefulShutdown = () => {
-    const server = getServer();
-    console.log("Shutting down gracefully...");
-    if (server) {
-        server.close(() => {
-            console.log("Server closed");
-        });
-    }
-    console.log(kleur.bgRed("Program terminated"));
+// Graceful Shutdown Handler
+const gracefulShutdown = async () => {
+    console.log("");
+    console.log(kleur.red("[GRACEFUL SHUTDOWN]"));
+
+    await disconnectWebSocket(); // Disconnect WebSocket Clients
+    await disconnectHttpServer(); // Disconnect HTTP Server
+
     process.exit(0);
 };
 

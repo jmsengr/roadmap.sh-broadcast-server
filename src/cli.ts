@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import kleur from "kleur";
-import { isPortTaken } from "./helpers/portChecker.js";
+import isPortTaken from "./helpers/portChecker.js";
 import { startServer, getServer } from "./server.js";
 import dotenv from "dotenv";
-import { initWebSocketHandshake, connectSocket, disconnectSocket } from "./websocket.js";
+import { initWebSocketHandshake, connectSocket, disconnectWebSocket } from "./websocket.js";
 import { createInterface } from "readline";
 
 dotenv.config();
@@ -58,7 +58,7 @@ const initClientCli = () => {
         rl.question(">  ", async (input: string) => {
             if (input === "exit") {
                 rl.close();
-                disconnectSocket();
+                disconnectWebSocket();
                 console.log(kleur.red("Program Exit"));
                 process.exit(1);
             }

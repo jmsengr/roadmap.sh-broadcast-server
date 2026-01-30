@@ -6,7 +6,7 @@
 import net from "net";
 
 // Callback takes a boolean indicating if the port is already in use
-export function isPortTaken(port: number, callback: (taken: boolean) => void): void {
+export default function isPortTaken(port: number, callback: (taken: boolean) => void): void {
     const tester = net
         .createServer()
         .once("error", (err: NodeJS.ErrnoException) => {
