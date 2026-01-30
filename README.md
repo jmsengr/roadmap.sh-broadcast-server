@@ -59,18 +59,27 @@ yarn install
 Start the Server
 
 ```bash
-npm run start-server
+npx broadcast-server start
 ```
 
 The server will start listening on the configured port (default: 3000).
 
 Connect as a Client
 
+To emulate a client/user open another terminal that points to project, then run the command
+
 ```bash
-npm run connect-client
+npx broadcast-server connect
 ```
 
-Once connected, type messages to broadcast them to all connected clients.
+You should see:
+
+```bash
+ Connected to websocket server
+[SERVER]: Welcome! your socket id is j1MwJ0-xBR0czaF-AAAB
+Type 'exit' to quit the program.
+>
+```
 
 ---
 
@@ -87,7 +96,7 @@ Once connected, type messages to broadcast them to all connected clients.
 # Tech Stack
 
 - Node.js / Express (for CLI handling, optional)
-- WebSockets (for real-time communication)
+- WebSockets (Socket.IO) (for real-time communication)
 - TypeScript (optional, for type safety)
 
 ---
