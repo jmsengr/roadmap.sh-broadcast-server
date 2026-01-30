@@ -65,7 +65,6 @@ npx broadcast-server start
 The server will start listening on the configured port (default: 3000).
 
 Connect as a Client
-
 To emulate a client/user open another terminal that points to project, then run the command
 
 ```bash
@@ -75,8 +74,8 @@ npx broadcast-server connect
 You should see:
 
 ```bash
- Connected to websocket server
-[SERVER]: Welcome! your socket id is j1MwJ0-xBR0czaF-AAAB
+Connected to websocket server
+[SERVER]: Welcome! your socket id is <socket.id>
 Type 'exit' to quit the program.
 >
 ```
