@@ -4,7 +4,7 @@ import kleur from "kleur";
 import isPortTaken from "./helpers/portChecker.js";
 import { startServer, getServer } from "./server.js";
 import dotenv from "dotenv";
-import { initWebSocketHandshake, connectSocket, disconnectWebSocket } from "./websocket.js";
+import { connectWebSocket, disconnectWebSocket, sendMessage } from "./websocket/client.js";
 import { createInterface } from "readline";
 
 dotenv.config();
@@ -34,9 +34,9 @@ if (!flag.length || flag.length === 0) {
         }
     });
 } else if (flag[0] === "connect") {
-    isPortTaken(Number(process.env.PORT) || 3000, (taken: boolean) => {
+    isPortTaken(Number(process.env.PORT) || 3000, async (taken: boolean) => {
         if (taken) {
-            connectSocket();
+            await connectWebSocket();
 
             // Initialize Client CLI
             initClientCli();
@@ -54,6 +54,7 @@ const initClientCli = () => {
     });
 
     console.log("Type 'exit' to quit the program.");
+
     const prompt = () => {
         rl.question(">  ", async (input: string) => {
             if (input === "exit") {
@@ -66,6 +67,9 @@ const initClientCli = () => {
             if (!input || input === "") {
                 prompt();
                 return;
+            } else {
+                sendMessage(input);
+                prompt();
             }
         });
     };

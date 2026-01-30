@@ -1,18 +1,21 @@
 import http from "http";
 import app from "./app.js";
 import kleur from "kleur";
-import { initWebSocketHandshake } from "./websocket.js";
+import { initWebSocketServer } from "./websocket/server.js";
 
 const PORT = process.env.PORT || 3000;
 
 let httpServer: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 
-const startServer = () => {
+const startServer = async () => {
     try {
         // Initialize Server
         httpServer = http.createServer(app);
 
         const server = http.createServer(app);
+
+        // Initialize WebSocket Handshake
+        await initWebSocketServer(server);
 
         server.listen(PORT, () => {
             console.log("Server running on port", PORT);

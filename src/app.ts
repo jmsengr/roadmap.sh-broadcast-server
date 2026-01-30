@@ -2,11 +2,10 @@ import express, { Request, Response, NextFunction } from "express";
 
 // ---- HELPERS ---- //
 
-// server
+// Servers
 import { disconnectHttpServer } from "./server.js";
-import { disconnectWebSocket } from "./websocket.js";
-import { syncTimer } from "./helpers/countDown.js";
-import isPortTaken from "./helpers/portChecker.js";
+
+import { disconnectWebSocket } from "./websocket/client.js";
 
 // dirname & filename
 import { fileURLToPath } from "url";
