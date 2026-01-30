@@ -1,5 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
 
+// ---- HELPERS ---- //
+
+// server
+import { getServer } from "./server.js";
+
 // dirname & filename
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
@@ -12,6 +17,7 @@ import cookieParser from "cookie-parser";
 
 // Interface
 import HttpError from "./interface/httpError.js";
+import kleur from "kleur";
 
 const app = express();
 
@@ -38,5 +44,20 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
         data: err.data || null,
     });
 });
+
+const gracefulShutdown = () => {
+    const server = getServer();
+    console.log("Shutting down gracefully...");
+    if (server) {
+        server.close(() => {
+            console.log("Server closed");
+        });
+    }
+    console.log(kleur.bgRed("Program terminated"));
+    process.exit(0);
+};
+
+process.on("SIGINT", gracefulShutdown);
+process.on("SIGTERM", gracefulShutdown);
 
 export default app;
